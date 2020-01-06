@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!--
+/**
+ *
+ * @category   Liftmode
+ * @package    PMCCoinGroup
+ * @copyright  Copyright (c) Dmitry Bashlov <dema50@gmail.com
+ * @license    MIT
+ */
+ -->
+<config>
+    <modules>
+        <Liftmode_PMCCoinGroup>
+            <active>true</active>
+            <codePool>local</codePool>
+            <depends>
+                <Mage_Payment />
+            </depends>
+        </Liftmode_PMCCoinGroup>
+    </modules>
+</config>

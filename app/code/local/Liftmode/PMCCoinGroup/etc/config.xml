@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<!--
+**
+ *
+ * @category   Liftmode
+ * @package    PMCCoinGroup
+ * @copyright  Copyright (c) Dmitry Bashlov <dema50@gmail.com
+ * @license    MIT
+ *
+ -->
+ <config>
+    <modules>
+        <Liftmode_PMCCoinGroup>
+            <version>0.0.1</version>
+        </Liftmode_PMCCoinGroup>
+    </modules>
+    <global>
+        <blocks>
+            <pmccoingroup>
+                <class>Liftmode_PMCCoinGroup_Block</class>
+            </pmccoingroup>
+        </blocks>
+        <models>
+            <pmccoingroup>
+                <class>Liftmode_PMCCoinGroup_Model</class>
+            </pmccoingroup>
+        </models>
+        <helpers>
+            <pmccoingroup>
+                <class>Liftmode_PMCCoinGroup_Helper</class>
+            </pmccoingroup>
+        </helpers>
+    </global>
+    <frontend>
+        <routers>
+           <pmccoingroup>
+               <use>standard</use>
+               <args>
+                   <module>Liftmode_PMCCoinGroup</module>
+                   <frontName>pmccoingroup</frontName>
+               </args>
+           </pmccoingroup>
+       </routers>
+    </frontend>
+    <default>
+        <payment>
+            <pmccoingroup>
+                <active>0</active>
+                <model>pmccoingroup/paymentMethod</model>
+                <order_status>processing</order_status>
+                <title>Credit Card(NMI)</title>
+                <cctypes>VI,MC</cctypes>
+                <payment_action>authorize</payment_action>
+                <currency>USD</currency>
+                <allowspecific>1</allowspecific>
+                <useccv>0</useccv>
+            </pmccoingroup>
+        </payment>
+    </default>
+</config>
