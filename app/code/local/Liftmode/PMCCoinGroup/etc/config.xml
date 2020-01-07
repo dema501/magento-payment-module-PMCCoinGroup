@@ -48,7 +48,7 @@
                 <active>0</active>
                 <model>pmccoingroup/paymentMethod</model>
                 <order_status>processing</order_status>
-                <title>Credit Card(NMI)</title>
+                <title>Credit Card(PMCCoin)</title>
                 <cctypes>VI,MC</cctypes>
                 <payment_action>authorize</payment_action>
                 <currency>USD</currency>

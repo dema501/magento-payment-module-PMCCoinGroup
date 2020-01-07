@@ -13,7 +13,7 @@
         <payment>
             <groups>
                 <pmccoingroup translate="label" module="paygate">
-                    <label>Network Merchants</label>
+                    <label>PMC Coin Group</label>
                     <sort_order>100</sort_order>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
