@@ -7,7 +7,7 @@
  * @license    MIT
  */
 
-class Liftmode_PMCCoinGroup_Block_Direct_Form_Cc extends Mage_Payment_Block_Form_Cc
+class Liftmode_PMCCoinGroup_Block_Form_Cc extends Mage_Payment_Block_Form_Cc
 {
     /**
      * Set block template

@@ -7,7 +7,7 @@
  * @license    MIT
  */
 
-class Liftmode_PMCCoinGroup_Block_Direct_Info_Cc extends Mage_Payment_Block_Info_Cc
+class Liftmode_PMCCoinGroup_Block_Info_Cc extends Mage_Payment_Block_Info_Cc
 {
     /**
      * Retrieve credit card type name
