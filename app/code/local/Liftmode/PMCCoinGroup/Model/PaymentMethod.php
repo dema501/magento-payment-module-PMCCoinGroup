@@ -154,10 +154,11 @@ class Liftmode_PMCCoinGroup_Model_PaymentMethod extends Mage_Payment_Model_Metho
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
         $reqHeaders = array(
-          'Content-Type: application/json',
-          'Cache-Control: no-cache',
-          'Authorization: ' . Mage::helper('core')->decrypt($this->getConfigData('token')),
-          'TEAM-ID: ' . $this->getConfigData('team_id'),
+            'Accept: application/json',
+            'Content-Type: application/json',
+            'Cache-Control: no-cache',
+            'Authorization: ' . Mage::helper('core')->decrypt($this->getConfigData('token')),
+            'team-id: ' . $this->getConfigData('team_id'),
         );
 
         curl_setopt($ch, CURLOPT_HTTPHEADER, array_merge($reqHeaders, $extReqHeaders));
