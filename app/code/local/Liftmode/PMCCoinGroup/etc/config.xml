@@ -53,7 +53,7 @@
                 <payment_action>authorize</payment_action>
                 <currency>USD</currency>
                 <allowspecific>1</allowspecific>
-                <useccv>0</useccv>
+                <useccv>1</useccv>
             </pmccoingroup>
         </payment>
     </default>
