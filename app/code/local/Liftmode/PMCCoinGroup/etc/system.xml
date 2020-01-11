@@ -40,7 +40,8 @@
                         </title>
                         <token translate="label">
                             <label>Token</label>
-                            <frontend_type>text</frontend_type>
+                            <frontend_type>obscure</frontend_type>
+                            <backend_model>adminhtml/system_config_backend_encrypted</backend_model>
                             <sort_order>3</sort_order>
                             <comment><![CDATA[API token mast be provided for each API request. Go to "Your Settings" -> "API" and then create the token as the example bellow.]]></comment>
                             <show_in_default>1</show_in_default>
