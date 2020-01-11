@@ -91,7 +91,7 @@ class Liftmode_PMCCoinGroup_Model_PaymentMethod extends Mage_Payment_Model_Metho
         $billing = $order->getBillingAddress();
 
         $data = array(
-            "amount" => (int) $payment->getAmount() * 100,, // Yes Decimal Total cents amount with up to 2 decimal places.,
+            "amount" => (int) $payment->getAmount() * 100, // Yes Decimal Total cents amount with up to 2 decimal places.,
             "wallet_id" => $this->getConfigData('wallet_id'),
             "order_id"=> $order->getIncrementId(),
             "customer" => array(
