@@ -65,7 +65,6 @@ class Liftmode_PMCCoinGroup_Model_PaymentMethod extends Mage_Payment_Model_Metho
         $payment->setAmount($amount);
         $payment->setAnetTransType(self::REQUEST_TYPE_AUTH_ONLY);
 
-        $request = $this->_buildRequest($payment);
         $data = $this->_doSale($payment);
 
         $payment->setTransactionId($data['details'][0][''])
@@ -92,7 +91,7 @@ class Liftmode_PMCCoinGroup_Model_PaymentMethod extends Mage_Payment_Model_Metho
         $billing = $order->getBillingAddress();
 
         $data = array(
-            "amount" => (float) $payment->getAmount(), // Yes Decimal Total dollar amount with up to 2 decimal places.,
+            "amount" => (int) $payment->getAmount() * 100,, // Yes Decimal Total cents amount with up to 2 decimal places.,
             "wallet_id" => $this->getConfigData('wallet_id'),
             "order_id"=> $order->getIncrementId(),
             "customer" => array(
@@ -103,20 +102,24 @@ class Liftmode_PMCCoinGroup_Model_PaymentMethod extends Mage_Payment_Model_Metho
                     "line1" => strval($billing->getStreet(1)),
                     "line2" => strval($billing->getStreet(2)),
                     "country" => strval($billing->getCountry()),
-                    "state" => strval($billing->getRegionCode()),// Yes String The state portion of the mailing address associated with the customer's checking account. It must be a valid US state or territory
+                    "state" => substr(strval($billing->getRegionCode()), 0, 3),// Yes String The state portion of the mailing address associated with the customer's checking account. It must be a valid US state or territory
                     "city" => strval($billing->getCity()), // Yes String The city portion of the mailing address associated with the customer's checking
                     "zipcode" => strval($billing->getPostcode()), // Yes String The zip code portion of the mailing address associated with the customer's checking account. Accepted formats: XXXXX,  XXXXX-XXXX
                 ),
                 "card" => array(
                     "cardholder_name"=> strval($billing->getFirstname()) . ' ' . strval($billing->getLastname()), // Yes String Account holder's first and last name
                     "number" => $payment->getCcNumber(),
-                    "cvv" => $payment->getCcCid(),
+                    "cvc" => $payment->getCcCid(),
                     "expiration" => sprintf('%02d-%02d', $payment->getCcExpMonth(),  substr($payment->getCcExpYear(), -2)),
                     "default" => true,
                     "register" => true
                 )
             )
         );
+
+        if (empty($data["customer"]["address"]["state"])) {
+            $data["customer"]["address"]["state"] = "UNW";
+        }
 
         list ($resCode, $resData) =  $this->_doPost($this->getURL() . '/v1/charges', json_encode($data));
 
@@ -127,9 +130,9 @@ class Liftmode_PMCCoinGroup_Model_PaymentMethod extends Mage_Payment_Model_Metho
     private function _doValidate($code, $data = [], $postData)
     {
         if ((int) substr($code, 0, 1) !== 2) {
-            $message = "";
+            $message = $data['message'];
             foreach ($data['errors'] as $field => $error) {
-                $message .= sprintf("\r\nthe issue is in %s field - %s\r\n", $field, $error);
+                $message .= sprintf("\r\nthe issue is in %s field - %s\r\n", $field, array_shift($error));
             }
 
             Mage::log(array('_doValidate--->', $code, $message, $data, $postData), null, 'pmccoingroup.log');
