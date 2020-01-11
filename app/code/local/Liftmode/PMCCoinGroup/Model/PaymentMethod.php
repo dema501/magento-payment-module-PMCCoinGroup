@@ -90,11 +90,25 @@ class Liftmode_PMCCoinGroup_Model_PaymentMethod extends Mage_Payment_Model_Metho
         $order = $payment->getOrder();
         $billing = $order->getBillingAddress();
 
+
         $data = array(
             "amount" => (int) $payment->getAmount() * 100, // Yes Decimal Total cents amount with up to 2 decimal places.,
             "wallet_id" => $this->getConfigData('wallet_id'),
             "order_id"=> $order->getIncrementId(),
-            "customer" => array(
+        );
+
+        $searchCustomerResp = $this->_doGet($this->getURL() . '/v1/customers', array(
+            'page' => 1,
+            'perPage' => 3,
+            'search' => strval($order->getCustomerEmail())
+        ));
+
+        if (sizeof($searchCustomerResp["data"]) > 0 && $searchCustomerResp["data"][0]["email"] ===  strval($order->getCustomerEmail())) {
+            $data["customer"] = array(
+                "id" => $searchCustomerResp["data"][0]["id"]
+            );
+        } else {
+            $data["customer"] = array(
                 "name"=> strval($billing->getFirstname()) . ' ' . strval($billing->getLastname()), // Yes String Account holder's first and last name
                 "email"  => strval($order->getCustomerEmail()), // Yes String Customer's email address. Must be a valid address. Upon processing of the draft an email will be sent to this address.
                 "phone" => strval($billing->getTelephone()),
@@ -114,8 +128,8 @@ class Liftmode_PMCCoinGroup_Model_PaymentMethod extends Mage_Payment_Model_Metho
                     "default" => true,
                     "register" => true
                 )
-            )
-        );
+            );
+        }
 
         if (empty($data["customer"]["address"]["state"])) {
             $data["customer"]["address"]["state"] = "UNW";
@@ -195,14 +209,25 @@ class Liftmode_PMCCoinGroup_Model_PaymentMethod extends Mage_Payment_Model_Metho
         return array($httpCode, $body);
     }
 
+    private function _doGet($url, $data)
+    {
+        if (sizeof($data) > 0) {
+            $url .= '?' . http_build_query($data);
+        }
 
-    private function _doPost($url, $query)
+        return $this->_doRequest($url, array(
+        ), array(
+            CURLOPT_RETURNTRANSFER => true,
+        ));
+    }
+
+    private function _doPost($url, $data)
     {
         return $this->_doRequest($url, array(
-            'Content-Length: ' . strlen($query),
+            'Content-Length: ' . strlen($data),
         ), array(
             CURLOPT_POST => true,
-            CURLOPT_POSTFIELDS => $query,
+            CURLOPT_POSTFIELDS => $data,
         ));
     }
 }
