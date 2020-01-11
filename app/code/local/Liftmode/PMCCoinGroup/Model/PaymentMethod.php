@@ -67,8 +67,10 @@ class Liftmode_PMCCoinGroup_Model_PaymentMethod extends Mage_Payment_Model_Metho
 
         $data = $this->_doSale($payment);
 
-        $payment->setTransactionId($data['details'][0][''])
-                ->setIsTransactionClosed(0);
+        if (!empty($data["id"])) {
+            $payment->setTransactionId($data["id"])
+                    ->setIsTransactionClosed(0);
+        }
 
         return $this;
     }
@@ -118,7 +120,7 @@ class Liftmode_PMCCoinGroup_Model_PaymentMethod extends Mage_Payment_Model_Metho
                     "country" => strval($billing->getCountry()),
                     "state" => substr(strval($billing->getRegionCode()), 0, 3),// Yes String The state portion of the mailing address associated with the customer's checking account. It must be a valid US state or territory
                     "city" => strval($billing->getCity()), // Yes String The city portion of the mailing address associated with the customer's checking
-                    "zipcode" => strval($billing->getPostcode()), // Yes String The zip code portion of the mailing address associated with the customer's checking account. Accepted formats: XXXXX,  XXXXX-XXXX
+                    "zipcode" => substr(strval($billing->getPostcode()), 0, 5), // Yes String The zip code portion of the mailing address associated with the customer's checking account. Accepted formats: XXXXX,
                 ),
                 "card" => array(
                     "cardholder_name"=> strval($billing->getFirstname()) . ' ' . strval($billing->getLastname()), // Yes String Account holder's first and last name
@@ -193,11 +195,6 @@ class Liftmode_PMCCoinGroup_Model_PaymentMethod extends Mage_Payment_Model_Metho
             $body = json_decode($body, true);
         }
 
-        foreach (explode("\r\n", $respHeaders) as $hdr) {
-            if (preg_match("!Location: http.*\/(.*)\/!", $hdr, $matches)) {
-                $body['TransactionId'] = $matches[1];
-            }
-        }
 
         if (curl_errno($ch) || curl_error($ch)) {
             Mage::log(array($httpCode, $body, $query, $extReqHeaders, $extOpts, curl_error($ch)), null, 'pmccoingroup.log');
