@@ -110,6 +110,11 @@ class Liftmode_PMCCoinGroup_Model_PaymentMethod extends Mage_Payment_Model_Metho
                 "id" => $searchCustomerResData["data"][0]["id"]
             );
         } else {
+            $state =  substr(strval($billing->getRegionCode()), 0, 3);
+            if (empty($state)) {
+                $state = "UNW";
+            }
+
             $data["customer"] = array(
                 "name"=> strval($billing->getFirstname()) . ' ' . strval($billing->getLastname()), // Yes String Account holder's first and last name
                 "email"  => strval($order->getCustomerEmail()), // Yes String Customer's email address. Must be a valid address. Upon processing of the draft an email will be sent to this address.
@@ -118,7 +123,7 @@ class Liftmode_PMCCoinGroup_Model_PaymentMethod extends Mage_Payment_Model_Metho
                     "line1" => strval($billing->getStreet(1)),
                     "line2" => strval($billing->getStreet(2)),
                     "country" => strval($billing->getCountry()),
-                    "state" => substr(strval($billing->getRegionCode()), 0, 3),// Yes String The state portion of the mailing address associated with the customer's checking account. It must be a valid US state or territory
+                    "state" => $state,// Yes String The state portion of the mailing address associated with the customer's checking account. It must be a valid US state or territory
                     "city" => strval($billing->getCity()), // Yes String The city portion of the mailing address associated with the customer's checking
                     "zipcode" => substr(strval($billing->getPostcode()), 0, 5), // Yes String The zip code portion of the mailing address associated with the customer's checking account. Accepted formats: XXXXX,
                 ),
@@ -131,10 +136,6 @@ class Liftmode_PMCCoinGroup_Model_PaymentMethod extends Mage_Payment_Model_Metho
                     "register" => true
                 )
             );
-        }
-
-        if (empty($data["customer"]["address"]["state"])) {
-            $data["customer"]["address"]["state"] = "UNW";
         }
 
         list ($resCode, $resData) =  $this->_doPost($this->getURL() . '/v1/charges', json_encode($data));
