@@ -99,15 +99,15 @@ class Liftmode_PMCCoinGroup_Model_PaymentMethod extends Mage_Payment_Model_Metho
             "order_id"=> $order->getIncrementId(),
         );
 
-        $searchCustomerResp = $this->_doGet($this->getURL() . '/v1/customers', array(
+        list ($searchCustomerResCode, $searchCustomerResData) = $this->_doGet($this->getURL() . '/v1/customers', array(
             'page' => 1,
             'perPage' => 3,
             'search' => strval($order->getCustomerEmail())
         ));
 
-        if (sizeof($searchCustomerResp["data"]) > 0 && $searchCustomerResp["data"][0]["email"] ===  strval($order->getCustomerEmail())) {
+        if (sizeof($searchCustomerResData["data"]) > 0 && $searchCustomerResData["data"][0]["email"] ===  strval($order->getCustomerEmail())) {
             $data["customer"] = array(
-                "id" => $searchCustomerResp["data"][0]["id"]
+                "id" => $searchCustomerResData["data"][0]["id"]
             );
         } else {
             $data["customer"] = array(
